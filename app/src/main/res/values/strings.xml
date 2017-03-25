@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Wifip2p</string>
+    <string name="title_activity_wi_fi_direct_broadcast_receiver">WiFiDirectBroadcastReceiver
+    </string>
 </resources>
