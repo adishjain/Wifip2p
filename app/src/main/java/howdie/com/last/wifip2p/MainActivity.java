@@ -15,10 +15,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION;
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION;
@@ -68,8 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        host = ((EditText) findViewById(R.id.server_edittext)).toString();
-        port = ((EditText) findViewById(R.id.port_edittext)).toString();
+        host = ((EditText) findViewById(R.id.server_edittext)).getText().toString();
+        port = ((EditText) findViewById(R.id.port_edittext)).getText().toString();
     }
 
     @Override
@@ -88,12 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClient(View view) {
         if(clientCodeRunner == null){
-            try {
-                clientCodeRunner = new ClientCodeRunner(this,
-                        InetAddress.getByName(host), Integer.parseInt(port));
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
+            clientCodeRunner = new ClientCodeRunner(this,
+                    host, Integer.parseInt(port));
         }
         clientCodeRunner.start();
     }
@@ -101,10 +95,10 @@ public class MainActivity extends AppCompatActivity {
     class ClientCodeRunner extends Thread {
 
         private Context myContext;
-        private InetAddress host;
+        private String host;
         private int port;
 
-        ClientCodeRunner(Context myContext, InetAddress host, int port){
+        ClientCodeRunner(Context myContext, String host, int port){
             this.myContext = myContext;
             this.host = host;
             this.port = port;
@@ -113,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             super.run();
+
             this.clientCode();
         }
 
@@ -137,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 OutputStream outputStream = socket.getOutputStream();
                 ContentResolver cr = context.getContentResolver();
                 InputStream inputStream = null;
-                inputStream = cr.openInputStream(Uri.parse("wifip2pTest/something.dontknow"));
+                inputStream = cr.openInputStream(Uri.parse("DCIM/Camera/IMG_20160724_110133.jpg"));
                 while ((len = inputStream.read(buf)) != -1) {
                     outputStream.write(buf, 0, len);
                 }
@@ -145,8 +140,10 @@ public class MainActivity extends AppCompatActivity {
                 inputStream.close();
             } catch (FileNotFoundException e) {
                 //catch logic
+                e.printStackTrace();
             } catch (IOException e) {
                 //catch logic
+                e.printStackTrace();
             }
 
         /**

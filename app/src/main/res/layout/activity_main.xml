@@ -30,6 +30,7 @@
         android:inputType="textPersonName"
         android:hint="@string/server_ip"
         android:ems="10"
+        android:text="@string/_192_168_2_175"
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_marginStart="49dp"
