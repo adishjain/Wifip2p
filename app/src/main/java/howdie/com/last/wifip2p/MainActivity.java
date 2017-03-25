@@ -4,13 +4,16 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -88,8 +91,8 @@ public class MainActivity extends AppCompatActivity {
         if(clientCodeRunner == null){
             clientCodeRunner = new ClientCodeRunner(this,
                     host, Integer.parseInt(port));
+            clientCodeRunner.start();
         }
-        clientCodeRunner.start();
     }
 
     class ClientCodeRunner extends Thread {
@@ -129,10 +132,13 @@ public class MainActivity extends AppCompatActivity {
                  * Create a byte stream from a JPEG file and pipe it to the output stream
                  * of the socket. This data will be retrieved by the server device.
                  */
+                Log.d("MAinAct","Sending file");
                 OutputStream outputStream = socket.getOutputStream();
                 ContentResolver cr = context.getContentResolver();
+                File myFile = new File(Environment.getExternalStorageDirectory() + "/"
+                        + "Music/GOD/SUNDAY.mp3");  //  + "DCIM/Camera/IMG_20160724_110133.jpg");;
                 InputStream inputStream = null;
-                inputStream = cr.openInputStream(Uri.parse("DCIM/Camera/IMG_20160724_110133.jpg"));
+                inputStream = new FileInputStream(myFile);//(Uri.parse("DCIM/Camera/IMG_20160724_110133.jpg"));
                 while ((len = inputStream.read(buf)) != -1) {
                     outputStream.write(buf, 0, len);
                 }
@@ -159,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
+                MainActivity.this.clientCodeRunner = null;
             }
 
         }
