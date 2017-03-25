@@ -5,11 +5,17 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     //PeerListListener myPeerListListener;
 
 
+    TextView textView;
     String host;
     String port;
 
@@ -45,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textView = (TextView)findViewById(R.id.textView);
 
         mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
         mChannel = mManager.initialize(this, getMainLooper(), null);
         mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+        WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
         mIntentFilter = new IntentFilter();
         mIntentFilter.addAction(WIFI_P2P_STATE_CHANGED_ACTION);
@@ -66,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        textView.setText(ip);
         host = ((EditText) findViewById(R.id.server_edittext)).getText().toString();
         port = ((EditText) findViewById(R.id.port_edittext)).getText().toString();
     }
@@ -90,6 +101,11 @@ public class MainActivity extends AppCompatActivity {
                     host, Integer.parseInt(port));
         }
         clientCodeRunner.start();
+    }
+    public void onServer(View view){
+
+        new FileServerAsyncTask(this,textView).execute();
+        Log.d("HAHAHA","HEHEHE");
     }
 
     class ClientCodeRunner extends Thread {
