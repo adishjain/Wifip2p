@@ -25,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
     WifiP2pManager.Channel mChannel;
     BroadcastReceiver mReceiver;
     IntentFilter mIntentFilter;
+    PeerListListener myPeerListListener;
+
 
 
 
@@ -32,6 +34,27 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+        mChannel = mManager.initialize(this, getMainLooper(), null);
+        mReceiver = new WiFiDirectBroadcastReceiver(mManager, mChannel, this);
+
+        mIntentFilter = new IntentFilter();
+        mIntentFilter.addAction(WIFI_P2P_STATE_CHANGED_ACTION);
+        mIntentFilter.addAction(WIFI_P2P_PEERS_CHANGED_ACTION);
+        mIntentFilter.addAction(WIFI_P2P_CONNECTION_CHANGED_ACTION);
+        mIntentFilter.addAction(WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onFailure(int reasonCode) {
+
+            }
+        });
     }
     @Override
     protected void onResume() {
