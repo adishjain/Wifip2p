@@ -2,4 +2,9 @@
     <string name="app_name">Wifip2p</string>
     <string name="title_activity_wi_fi_direct_broadcast_receiver">WiFiDirectBroadcastReceiver
     </string>
+    <string name="server">Server</string>
+    <string name="client">Client</string>
+    <string name="_8888">8888</string>
+    <string name="port_number">Port Number</string>
+    <string name="server_ip">Server IP</string>
 </resources>
