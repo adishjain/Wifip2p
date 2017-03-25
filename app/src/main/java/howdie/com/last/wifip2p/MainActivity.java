@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
@@ -15,8 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
     TextView textView;
     String host;
-    String port;
+    String dataPort;
+    String controlPort;
 
     ClientCodeRunner clientCodeRunner;
 
@@ -81,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         });
         textView.setText(ip);
         host = ((EditText) findViewById(R.id.server_edittext)).getText().toString();
-        port = ((EditText) findViewById(R.id.port_edittext)).getText().toString();
+        dataPort = ((EditText) findViewById(R.id.port_edittext)).getText().toString();
     }
 
     @Override
@@ -101,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClient(View view) {
         if(clientCodeRunner == null){
             clientCodeRunner = new ClientCodeRunner(this,
-                    host, Integer.parseInt(port));
+                    host, Integer.parseInt(dataPort));
             clientCodeRunner.start();
         }
     }
@@ -139,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 /**
                  * Create a client socket with the host,
-                 * port, and timeout information.
+                 * dataPort, and timeout information.
                  */
                 socket.bind(null);
                 socket.connect((new InetSocketAddress(host, port)), 500);
